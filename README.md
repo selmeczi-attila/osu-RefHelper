@@ -28,10 +28,15 @@ A command-line tool designed to assist osu! tournament referees in managing matc
 2. Create a `pool.txt` file in the same directory as the executable with your map pool in the following format:
 
    NM1:beatmap_id
+   
    NM2:beatmap_id
+   
    HD1:beatmap_id
+   
    HR1:beatmap_id
+   
    DT1:beatmap_id
+   
    TB:beatmap_id
 
 
