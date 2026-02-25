@@ -23,6 +23,7 @@ namespace osuRefHelper
     {
 
         // TODO: ADD CONFIG FILE INTEGRATION!!! ASAP, more null/invalid input/pool txt correctness check and all other checks ig
+        // refactor everything for nicer looks, more efficient code, less junk
 
         string filePath = "pool.txt";
 
