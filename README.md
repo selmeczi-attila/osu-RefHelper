@@ -27,6 +27,7 @@ A command-line tool designed to assist osu! tournament referees in managing matc
 
 2. Create a `pool.txt` file in the same directory as the executable with your map pool in the following format:
 
+
    NM1:beatmap_id
    
    NM2:beatmap_id
@@ -76,10 +77,15 @@ Each line should contain a map slot identifier followed by a colon and the beatm
 
 
 NM1:123456
+
 NM2:234567
+
 HD1:345678
+
 HR1:456789
+
 DT1:567890
+
 TB1:678901
 
 
