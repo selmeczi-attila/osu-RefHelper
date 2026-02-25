@@ -118,6 +118,8 @@ namespace osuRefHelper
 
             player2 = new Player(p2Name);
 
+            //Console.Title = (player1.Name + " vs " + player2.Name);
+
             Console.WriteLine("");
 
             Console.Write("Best of: ");
@@ -144,16 +146,16 @@ namespace osuRefHelper
             // TODO: config file specify round and make this not fixed round with acronym
             // HOL Group Stage: defii vs geczy (GROUP A)
             if (string.IsNullOrEmpty(groupLetter)){
-                Console.WriteLine("!mp make " + tourneyAcronymAndRound + ": " + player1.Name + " vs " + player2.Name);
+                Console.WriteLine($"!mp make {tourneyAcronymAndRound}: {player1.Name} vs {player2.Name}");
             }
             else
             {
-                Console.WriteLine("!mp make " + tourneyAcronymAndRound + ": " + player1.Name + " vs " + player2.Name + " (GROUP " + groupLetter + ")");
+                Console.WriteLine($"!mp make {tourneyAcronymAndRound}: {player1.Name} vs {player2.Name} (GROUP {groupLetter})");
             }
 
             Console.WriteLine("!mp set 0 3");
-            Console.WriteLine("!mp invite " + player1.Name);
-            Console.WriteLine("!mp invite " + player2.Name);
+            Console.WriteLine($"!mp invite {player1.Name}");
+            Console.WriteLine($"!mp invite {player2.Name}");
 
             Console.WriteLine("");
 
@@ -165,7 +167,7 @@ namespace osuRefHelper
         void AskRollWinner()
         {
             Console.WriteLine("Who won the roll?");
-            Console.Write(player1.Name + "(1) or " + player2.Name + "(2)? ");
+            Console.Write($"{player1.Name}(1) or {player2.Name}(2)? ");
 
             string rollWinnerInput = Console.ReadLine();
 
@@ -207,7 +209,8 @@ namespace osuRefHelper
                 Console.Write("Pick(1) or Ban(2)? ");
                 firstInput = Console.ReadLine();
             }
-            
+
+            //todo:             
             if(rollWinnerInput == "1")
             {
                 if(firstInput == "1")
@@ -243,7 +246,7 @@ namespace osuRefHelper
             Console.Clear();
             if(roundsPlayed == 0)
             {
-                Console.WriteLine(player1.Name + " " + player1.Score + " - " + player2.Score + " " + player2.Name);
+                Console.WriteLine($"{player1.Name} {player1.Score} - {player2.Score} {player2.Name}");
             }
             else
             {
@@ -251,44 +254,44 @@ namespace osuRefHelper
                 {
                     if (roundsPlayed % 2 != 0)
                     {
-                        Console.WriteLine(player1.Name + " " + player1.Score + " - " + player2.Score + " " + player2.Name + " | " + "Next Pick: " + player2.Name);
+                        Console.WriteLine($"{player1.Name} {player1.Score} - {player2.Score} {player2.Name} | Next Pick: {player2.Name}");
                     }
                     else
                     {
-                        Console.WriteLine(player1.Name + " " + player1.Score + " - " + player2.Score + " " + player2.Name + " | " + "Next Pick: " + player1.Name);
+                        Console.WriteLine($"{player1.Name} {player1.Score} - {player2.Score} {player2.Name} | Next Pick: {player1.Name}");
                     }
                 }
                 else if (player1.RollWinner && !player1.firstPick)
                 {
                     if (roundsPlayed % 2 != 0)
                     {
-                        Console.WriteLine(player1.Name + " " + player1.Score + " - " + player2.Score + " " + player2.Name + " | " + "Next Pick: " + player1.Name);
+                        Console.WriteLine($"{player1.Name} {player1.Score} - {player2.Score} {player2.Name} | Next Pick: {player1.Name}");
                     }
                     else
                     {
-                        Console.WriteLine(player1.Name + " " + player1.Score + " - " + player2.Score + " " + player2.Name + " | " + "Next Pick: " + player2.Name);
+                        Console.WriteLine($"{player1.Name} {player1.Score} - {player2.Score} {player2.Name} | Next Pick: {player2.Name}");
                     }
                 }
                 else if (player2.RollWinner && player2.firstPick)
                 {
                     if (roundsPlayed % 2 != 0)
                     {
-                        Console.WriteLine(player1.Name + " " + player1.Score + " - " + player2.Score + " " + player2.Name + " | " + "Next Pick: " + player1.Name);
+                        Console.WriteLine($"{player1.Name} {player1.Score} - {player2.Score} {player2.Name} | Next Pick: {player1.Name}");
                     }
                     else
                     {
-                        Console.WriteLine(player1.Name + " " + player1.Score + " - " + player2.Score + " " + player2.Name + " | " + "Next Pick: " + player2.Name);
+                        Console.WriteLine($"{player1.Name} {player1.Score} - {player2.Score} {player2.Name} | Next Pick: {player2.Name}");
                     }
                 }
                 else if (player2.RollWinner && !player2.firstPick)
                 {
                     if (roundsPlayed % 2 != 0)
                     {
-                        Console.WriteLine(player1.Name + " " + player1.Score + " - " + player2.Score + " " + player2.Name + " | " + "Next Pick: " + player2.Name);
+                        Console.WriteLine($"{player1.Name} {player1.Score} - {player2.Score} {player2.Name} | Next Pick: {player2.Name}");
                     }
                     else
                     {
-                        Console.WriteLine(player1.Name + " " + player1.Score + " - " + player2.Score + " " + player2.Name + " | " + "Next Pick: " + player1.Name);
+                        Console.WriteLine($"{player1.Name} {player1.Score} - {player2.Score} {player2.Name} | Next Pick: {player1.Name}");
                     }
                 }
             }
@@ -307,7 +310,7 @@ namespace osuRefHelper
                 foreach (string line in pool)
                 {
                     List<string> values = line.Split(':').ToList();
-                    Console.Write(values[0] + " ");
+                    Console.Write($"{values[0]} ");
                 }
                 Console.WriteLine("");
             }
@@ -319,7 +322,7 @@ namespace osuRefHelper
                     List<string> values = line.Split(':').ToList();
                     if (!values[0].Contains("tb", StringComparison.OrdinalIgnoreCase))
                     {
-                        Console.Write(values[0] + " ");
+                        Console.Write($"{values[0]} ");
                     }
                 }
                 Console.WriteLine("");
@@ -336,7 +339,7 @@ namespace osuRefHelper
 
             if (player1.firstBan)
             {
-                Console.Write(player1.Name + "'s Ban: ");
+                Console.Write($"{player1.Name}'s Ban: ");
                 ban1 = Console.ReadLine();
 
                 foreach (string line in pool)
@@ -359,11 +362,14 @@ namespace osuRefHelper
                     Console.Clear();
 
                     DisplayPool();
+
+                    Console.WriteLine("");
+
                     GetBans();
                     return;
                 }
 
-                Console.Write(player2.Name + "'s Ban: ");
+                Console.Write($"{player2.Name}'s Ban: ");
 
                 ban2 = Console.ReadLine();
 
@@ -392,7 +398,7 @@ namespace osuRefHelper
                 }
             }else if (player2.firstBan)
             {
-                Console.Write(player2.Name + "'s Ban: ");
+                Console.Write($"{player2.Name}'s Ban: ");
 
                 ban2 = Console.ReadLine();
 
@@ -420,7 +426,7 @@ namespace osuRefHelper
                     return;
                 }
 
-                Console.Write(player1.Name + "'s Ban: ");
+                Console.Write($"{player1.Name}'s Ban: ");
                 ban1 = Console.ReadLine();
 
                 foreach (string line in pool)
@@ -510,7 +516,9 @@ namespace osuRefHelper
 
                 Console.WriteLine(slot);
 
-                Console.WriteLine("\n!mp map " + id);
+                Console.WriteLine("");
+
+                Console.WriteLine($"!mp map {id}");
 
                 if(line.Contains("nm", StringComparison.OrdinalIgnoreCase))
                 {
@@ -532,6 +540,7 @@ namespace osuRefHelper
                 {
                     Console.WriteLine("!mp mods nf");
                 }
+
                 Console.WriteLine("");
 
                 pool = pool.Where(line =>
@@ -544,13 +553,11 @@ namespace osuRefHelper
 
                 Console.Clear();
                 
-                Console.WriteLine(player1.Name + " or " + player2.Name + "?");
+                Console.WriteLine($"{player1.Name} or {player2.Name}?");
                 Console.Write("Round Winner: ");
                 AskWinner(Console.ReadLine());
             }
 
-            Console.Write("Press Enter to continue...");
-            Console.ReadLine();
             Console.Clear();
 
             DisplayPool();
@@ -567,7 +574,7 @@ namespace osuRefHelper
                 if (player1.Score > bestOf / 2)
                 {
                     Console.WriteLine("");
-                    Console.WriteLine(player1.Name + " " + player1.Score + " - " + player2.Score + " " + player2.Name + " | " + "Winner: " + player1.Name);
+                    Console.WriteLine($"{player1.Name} {player1.Score} - {player2.Score} {player2.Name} | Winner: {player1.Name}");
                     Console.WriteLine("");
                     Console.WriteLine("Press Enter to exit...");
                     Console.ReadLine();
@@ -582,7 +589,7 @@ namespace osuRefHelper
                 if (player2.Score > bestOf / 2)
                 {
                     Console.WriteLine("");
-                    Console.WriteLine(player1.Name + " " + player1.Score + " - " + player2.Score + " " + player2.Name + " | " + "Winner: " + player2.Name);
+                    Console.WriteLine($"{player1.Name} {player1.Score} - {player2.Score} {player2.Name} | Winner: {player2.Name}");
                     Console.WriteLine("");
                     Console.WriteLine("Press Enter to exit...");
                     Console.ReadLine();
@@ -593,7 +600,7 @@ namespace osuRefHelper
             {
                 Console.Clear();
 
-                Console.WriteLine(player1.Name + " or " + player2.Name + "?");
+                Console.WriteLine($"{player1.Name} or {player2.Name}?");
                 Console.Write("Round Winner: ");
                 AskWinner(Console.ReadLine());
             }
