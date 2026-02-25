@@ -22,10 +22,11 @@ A command-line tool designed to assist osu! tournament referees in managing matc
 1. Clone the repository:
 
    git clone https://github.com/selmeczi-attila/osu-RefHelper.git
+   
    cd osu-RefHelper
 
 
-2. Create a `pool.txt` file in the same directory as the executable with your map pool in the following format:
+3. Create a `pool.txt` file in the same directory as the executable with your map pool in the following format:
 
 
    NM1:beatmap_id
@@ -41,7 +42,7 @@ A command-line tool designed to assist osu! tournament referees in managing matc
    TB:beatmap_id
 
 
-3. Build and run:
+4. Build and run:
 
    dotnet build
    dotnet run
