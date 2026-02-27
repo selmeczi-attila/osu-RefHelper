@@ -107,14 +107,6 @@ The tool automatically generates the following osu! IRC commands:
 - `!mp map` - Changes to the picked map
 - `!mp mods` - Sets appropriate mods (always includes NF)
 
-## Roadmap
-
-- [ ] Add configuration file support for modularity
-- [ ] Improve input validation
-- [ ] Prevent duplicate player names
-- [ ] Code refactoring for better maintainability
-- [ ] Enhance pool.txt correctness validation
-
 ## Contributing
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
