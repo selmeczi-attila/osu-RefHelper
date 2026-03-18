@@ -81,8 +81,7 @@ namespace osuRefHelper
                 Environment.Exit(0);
             }
         }
-
-        // TODO: Dont let 2 players have the same name, run whole function from the start so p1 p2 gets requested again
+        
         void SetupLobby()
         {
             Console.Write("Player 1 (higher seed): ");
@@ -117,7 +116,22 @@ namespace osuRefHelper
                 p2Name = Console.ReadLine();
             }
 
-            player2 = new Player(p2Name);
+            if(p1Name.Equals(p2Name, StringComparison.OrdinalIgnoreCase))
+            {
+                Console.Clear();
+                Console.WriteLine("Player 1 and Player 2 cannot have the same name!");
+                Console.WriteLine("");
+                Console.Write("Press Enter to continue...");
+                Console.ReadLine();
+                Console.Clear();
+                SetupLobby();
+                return;
+            }
+            else
+            {
+                 player2 = new Player(p2Name);
+            }
+           
 
             //Console.Title = (player1.Name + " vs " + player2.Name);
 
@@ -513,12 +527,18 @@ namespace osuRefHelper
             {
                 List<string> lineParts = line.Split(':').ToList();
                 string slot = lineParts[0];
-                string id = lineParts[1];
+                if (!long.TryParse(lineParts[1], out long id))
+                {
+                    Console.WriteLine($"Invalid map id in slot {slot}: '{lineParts[1]}' is not numeric. Please check pool.txt.");
+                    Console.WriteLine("Press Enter to continue...");
+                    Console.ReadLine();
+                    return;
+                }
 
                 Console.WriteLine(slot);
 
                 Console.WriteLine("");
-
+                
                 Console.WriteLine($"!mp map {id}");
 
                 if(line.Contains("nm", StringComparison.OrdinalIgnoreCase))
