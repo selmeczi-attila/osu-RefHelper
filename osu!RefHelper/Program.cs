@@ -25,10 +25,16 @@ namespace osuRefHelper
         // TODO: ADD CONFIG FILE INTEGRATION!!! ASAP, more null/invalid input/pool txt correctness check and all other checks ig
         // refactor everything for nicer looks, more efficient code, less junk
 
+        string configFilePath = "config.txt";
         string filePath = "pool.txt";
 
         List<string> pool;
+        List<string> configLines;
         string tourneyAcronymAndRound;
+
+        string acronym;
+
+        List<string> playerNames;
 
         Player player1;
         Player player2;
@@ -46,11 +52,11 @@ namespace osuRefHelper
 
         void Run()
         {
+            ReadConfig();
+
             ReadPool();
-            Console.WriteLine("Example: HOL Group Stage");
-            Console.Write("Tourney Acronym + Round: ");
-            tourneyAcronymAndRound = Console.ReadLine();
-            Console.Clear();
+
+            RoundSetup();
 
             SetupLobby();
 
@@ -64,6 +70,55 @@ namespace osuRefHelper
 
             Console.WriteLine("Press q to exit...");
             GetCommands(Console.ReadLine());
+        }
+
+        void WriteConfig()
+        {
+            Console.WriteLine("config.txt is missing. Create a config.txt file with the following content:");
+            Console.Write("TeamSize:");
+            string teamSize = Console.ReadLine();
+            Console.Write("Acronym:");
+            string acronym = Console.ReadLine();
+            Console.Write("Players:");
+            string players = Console.ReadLine();
+            if(teamSize == "1")
+            {configLines = new List<string>
+            {
+                $"TeamSize:{teamSize}",
+                $"Acronym:{acronym}",
+                $"Players:{players}",
+            };
+                File.WriteAllLines(configFilePath, configLines);
+                Console.WriteLine("Press Enter to continue...");
+                Console.ReadLine();
+            }
+            else
+            {
+                Console.Write("Teams:");
+                string teams = Console.ReadLine();
+                configLines = new List<string>
+            {
+                $"TeamSize: {teamSize}",
+                $"Acronym: {acronym}",
+                $"Players: {players}",
+                $"Teams: {teams}"
+            };
+                File.WriteAllLines(configFilePath, configLines);
+                Console.WriteLine("Press Enter to continue...");
+                Console.ReadLine();
+            }      
+        }
+
+        void ReadConfig()
+        {
+            if (File.Exists(configFilePath))
+            {
+                configLines = File.ReadAllLines(configFilePath).ToList();
+            }
+            else
+            {
+                WriteConfig();
+            }
         }
 
         void ReadPool()
@@ -81,11 +136,52 @@ namespace osuRefHelper
                 Environment.Exit(0);
             }
         }
-        
-        void SetupLobby()
+    
+        void RoundSetup()
         {
+            foreach (string line in configLines)
+            {
+                List<string> acro = line.Split(':').ToList();
+                if (acro[0].Equals("Acronym", StringComparison.OrdinalIgnoreCase))
+                {
+                    acronym = acro[1].Trim();
+                    break;
+                }
+            }
+            Console.WriteLine("Example: Group Stage");
+            Console.Write("Tourney Round: ");
+            tourneyAcronymAndRound = $"{acronym} {Console.ReadLine()}";
+            Console.Clear();
+
+            foreach (string line in configLines)
+            {
+                List<string> players = line.Split(':').ToList();
+                if (players[0].Equals("Players", StringComparison.OrdinalIgnoreCase))
+                {
+                    playerNames = players[1].Trim().Split(',').Select(s => s.Trim()).ToList();
+                    break;
+                }
+            }
+        }
+
+        void SetupLobby()
+        {   
             Console.Write("Player 1 (higher seed): ");
             string p1Name = Console.ReadLine();
+            if(playerNames.Contains(p1Name))
+            {  
+                player1 = new Player(p1Name);
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Player name not found!");
+                Console.WriteLine("");
+                Console.Write("Press Enter to continue...");
+                Console.ReadLine();
+                Console.Clear();
+                SetupLobby();
+            }
 
             while (p1Name.Equals(""))
             {
@@ -95,14 +191,26 @@ namespace osuRefHelper
                 Console.Write("Press Enter to continue...");
                 Console.ReadLine();
                 Console.Clear();
-                Console.Write("Player 1 (higher seed): ");
-                p1Name = Console.ReadLine();
+                SetupLobby();
             }
 
-            player1 = new Player(p1Name);
-
+            
             Console.Write("Player 2: ");
             string p2Name = Console.ReadLine();
+            if(playerNames.Contains(p2Name))
+            {  
+                player2 = new Player(p2Name);
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Player name not found!");
+                Console.WriteLine("");
+                Console.Write("Press Enter to continue...");
+                Console.ReadLine();
+                Console.Clear();
+                SetupLobby();
+            }
 
             while (p2Name.Equals(""))
             {
@@ -112,8 +220,7 @@ namespace osuRefHelper
                 Console.Write("Press Enter to continue...");
                 Console.ReadLine();
                 Console.Clear();
-                Console.Write("Player 2: ");
-                p2Name = Console.ReadLine();
+                SetupLobby();
             }
 
             if(p1Name.Equals(p2Name, StringComparison.OrdinalIgnoreCase))
