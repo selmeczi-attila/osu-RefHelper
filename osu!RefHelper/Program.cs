@@ -1,24 +1,5 @@
-﻿using System.Collections.Generic;
-
-namespace osuRefHelper
+﻿namespace osuRefHelper
 {
-    internal class Player
-    {
-        public string Name { get; set; }
-        public int Score { get; set; }
-        public bool RollWinner { get; set; }
-        public bool firstPick { get; set; }
-        public bool firstBan { get; set; }
-
-        public Player(string name)
-        {
-            Name = name;
-            Score = 0;
-            RollWinner = false;
-            firstPick = false;
-            firstBan = false;
-        }
-    }
     internal class Program
     {
 
@@ -27,6 +8,7 @@ namespace osuRefHelper
 
         string configFilePath = "config.txt";
         string filePath = "pool.txt";
+        string csvnamePath = "players.csv";
 
         List<string> pool;
         List<string> configLines;
@@ -79,41 +61,63 @@ namespace osuRefHelper
             string teamSize = Console.ReadLine();
             Console.Write("Acronym:");
             string acronym = Console.ReadLine();
-            Console.Write("Players:");
+            Console.Write("Sheet url(Players):");
             string players = Console.ReadLine();
             if(teamSize == "1")
-            {configLines = new List<string>
-            {
-                $"TeamSize:{teamSize}",
-                $"Acronym:{acronym}",
-                $"Players:{players}",
-            };
+            {  
+                configLines = new List<string>
+                {
+                    $"TeamSize;{teamSize}",
+                    $"Acronym;{acronym}",
+                    $"Sheet url(Players);{players}",
+                };
+                
                 File.WriteAllLines(configFilePath, configLines);
                 Console.WriteLine("Press Enter to continue...");
                 Console.ReadLine();
             }
+            //WIP TEAM CONFIG, not working yet.
             else
             {
                 Console.Write("Teams:");
                 string teams = Console.ReadLine();
                 configLines = new List<string>
             {
-                $"TeamSize: {teamSize}",
-                $"Acronym: {acronym}",
-                $"Players: {players}",
-                $"Teams: {teams}"
+                $"TeamSize;{teamSize}",
+                $"Acronym;{acronym}",
+                $"Sheet url(Players);{players}",
+                $"Teams;{teams}"
             };
                 File.WriteAllLines(configFilePath, configLines);
                 Console.WriteLine("Press Enter to continue...");
                 Console.ReadLine();
+                ReadConfig();
             }      
         }
 
         void ReadConfig()
-        {
+        {   //Maybe this will be moved to WriteConfig.
             if (File.Exists(configFilePath))
             {
                 configLines = File.ReadAllLines(configFilePath).ToList();
+                playerNames = File.ReadAllLines(csvnamePath).ToList();
+
+                
+                string csvUrl = "";
+                foreach (string line in configLines)
+                {
+                    List<string> url = line.Split(';').ToList();
+                    if (url[0].Equals("Sheet url(Players)", StringComparison.OrdinalIgnoreCase))
+                    {
+                        csvUrl = url[1].Trim();
+                        break;
+                    }
+                }
+                using var client = new HttpClient();
+                string csvContent = client.GetStringAsync(csvUrl).Result;
+                
+                File.WriteAllTextAsync(csvnamePath, csvContent).Wait();
+
             }
             else
             {
@@ -141,7 +145,7 @@ namespace osuRefHelper
         {
             foreach (string line in configLines)
             {
-                List<string> acro = line.Split(':').ToList();
+                List<string> acro = line.Split(';').ToList();
                 if (acro[0].Equals("Acronym", StringComparison.OrdinalIgnoreCase))
                 {
                     acronym = acro[1].Trim();
@@ -153,15 +157,7 @@ namespace osuRefHelper
             tourneyAcronymAndRound = $"{acronym} {Console.ReadLine()}";
             Console.Clear();
 
-            foreach (string line in configLines)
-            {
-                List<string> players = line.Split(':').ToList();
-                if (players[0].Equals("Players", StringComparison.OrdinalIgnoreCase))
-                {
-                    playerNames = players[1].Trim().Split(',').Select(s => s.Trim()).ToList();
-                    break;
-                }
-            }
+            playerNames = playerNames.Select(name => name.Trim('"')).ToList();
         }
 
         void SetupLobby()
