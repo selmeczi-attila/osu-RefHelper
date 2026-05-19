@@ -15,4 +15,6 @@ internal class Player
             firstPick = false;
             firstBan = false;
         }
+        
     }
+    
